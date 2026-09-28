@@ -29,7 +29,7 @@ const telaMaior = document.querySelector('.maior');
 let total = 0;
 let maiorValor = 0;
 let maiorDescricao = '';
-
+let texthist='';
 
 /* -----------------------------------------------------------
    Escutar e alterar
@@ -57,7 +57,6 @@ formulario.addEventListener('submit', function (evento) {
     } else {
          
         const ngasto = document.querySelector('.quantidade')
-        
         ngasto.textContent = Number(ngasto.textContent) +1; 
 
         erro.textContent = '';
@@ -84,7 +83,15 @@ formulario.addEventListener('submit', function (evento) {
 
         const mgasto = document.querySelector('.media')
         mgasto.textContent = Number(total)/ Number(ngasto.textContent); 
+
         
+        const historico = document.querySelector('.historico') ;
+        historico.textContent='';
+        texthist += `\n${descricao}` +  `${' -- R$ ' + total.toFixed(2).replace('.', ',')}`;
+        historico.textContent += texthist;
+
+        const orca= document.querySelector('.orca')
+        orca.textContent= `${Number(orca.textContent.toFixed(2).replace(',', '.'))- valor}` ;
     }
 
 

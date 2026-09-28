@@ -190,6 +190,9 @@ button:hover {
     white-space: pre-line;
 }
 
+.orca{
+    display: inline;
+}
 
 /* -----------------------------------------------------------
    A partir de 800px: formulário e resumo lado a lado
