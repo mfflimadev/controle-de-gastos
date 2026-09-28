@@ -55,6 +55,10 @@ formulario.addEventListener('submit', function (evento) {
     } else if (valor <= 0) {
         erro.textContent = 'O valor precisa ser maior que zero.';
     } else {
+         
+        const ngasto = document.querySelector('.quantidade')
+        
+        ngasto.textContent = Number(ngasto.textContent) +1; 
 
         erro.textContent = '';
 
@@ -77,6 +81,11 @@ formulario.addEventListener('submit', function (evento) {
         // limpar para o próximo
         campoDescricao.value = '';
         campoValor.value = '';
+
+        const mgasto = document.querySelector('.media')
+        mgasto.textContent = Number(total)/ Number(ngasto.textContent); 
+        
     }
+
 
 });
