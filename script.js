@@ -30,7 +30,7 @@ let total = 0;
 let maiorValor = 0;
 let maiorDescricao = '';
 let texthist='';
-
+const orca= document.querySelector('.orca')
 /* -----------------------------------------------------------
    Escutar e alterar
    ----------------------------------------------------------- */
@@ -48,6 +48,8 @@ formulario.addEventListener('submit', function (evento) {
 
     /* Validação: o primeiro teste verdadeiro para a cadeia.
        Só chega no else quem passou por todos. */
+       
+       
     if (descricao === '') {
         erro.textContent = 'Escreva uma descrição.';
     } else if (campoValor.value === '') {
@@ -55,7 +57,7 @@ formulario.addEventListener('submit', function (evento) {
     } else if (valor <= 0) {
         erro.textContent = 'O valor precisa ser maior que zero.';
     } else {
-         
+      
         const ngasto = document.querySelector('.quantidade')
         ngasto.textContent = Number(ngasto.textContent) +1; 
 
@@ -90,8 +92,21 @@ formulario.addEventListener('submit', function (evento) {
         texthist += `\n${descricao}` +  `${' -- R$ ' + total.toFixed(2).replace('.', ',')}`;
         historico.textContent += texthist;
 
-        const orca= document.querySelector('.orca')
-        orca.textContent= `${Number(orca.textContent.toFixed(2).replace(',', '.'))- valor}` ;
+        
+
+        orca.textContent= `${Number(orca.textContent.replace(',', '.'))- valor}` ;
+
+        if (Number(orca.textContent)<=0){ 
+         orca.textContent='0';
+         
+         const tot= document.querySelector('.total');
+         const rest =document.querySelector('.restante');
+
+          tot.classList.toggle('estourado');
+          rest.classList.toggle('estourado');       
+         erro.textContent= 'O orçamento foi atingido.';
+
+        }
     }
 
 
