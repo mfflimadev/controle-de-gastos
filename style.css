@@ -172,8 +172,8 @@ button:hover {
 }
 
 /* Quando o total passa do orçamento. */
-.indicador strong.estourado,
-.orcamento strong.estourado {
+.total.estourado,
+.restante.estourado {
     color: #b3261e;
 }
 
