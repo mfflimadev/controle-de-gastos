@@ -17,10 +17,11 @@ const orca= document.querySelector('.orca')
 
 
    function formatarReais(valor) { 
-    console.log( 'R$ ' + valor.toFixed(2).replace('.', ','))
-    return 'R$ ' + valor.toFixed(2).replace('.', ',');}
-
-    function calcularMedia(total,ngastos){ return total/ngastos}
+    return 'R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+    function calcularMedia(total,ngasto){
+        return total/ngasto 
+    };
 
 
 
@@ -38,8 +39,12 @@ evento.preventDefault();
         erro.textContent = 'O valor precisa ser maior que zero.';
     } else {
       
-      ngasto = Number(document.querySelector('.quantidade').textContent)
-      ngasto= ngasto +1;
+       const ngasto = document.querySelector('.quantidade');
+       ngastos= Number(ngasto.textContent);
+       ngastos= ngastos+1;
+       ngasto.textContent= ngastos;
+       
+       console.log(ngastos)
         
 
         erro.textContent = '';
@@ -60,7 +65,7 @@ evento.preventDefault();
         campoValor.value = '';
 
         const mgasto = document.querySelector('.media')
-        mgasto.textContent= formatarReais(calcularMedia(total,ngasto))
+        mgasto.textContent= formatarReais(calcularMedia(total,ngastos))
         
         const historico = document.querySelector('.historico') ;
         historico.textContent='';
@@ -81,4 +86,7 @@ evento.preventDefault();
           rest.classList.toggle('estourado');     
         }
      }
+
+        console.log( formatarReais(valor));  
+         console.log( calcularMedia(total, ngastos));
     });
