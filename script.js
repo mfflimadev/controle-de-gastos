@@ -1,18 +1,12 @@
 
 
-    function podeComprar(nomeDigitado,valorDigitado) {
-    return nomeDigitado.trim() !== '' && valorDigitado !== '';
-}
-
-
-
 const formulario = document.querySelector('.formulario');
 const campoDescricao = document.querySelector('.campo-descricao');
 const campoValor = document.querySelector('.campo-valor');
 const erro = document.querySelector('.erro');
 const telaTotal = document.querySelector('.total');
 const telaMaior = document.querySelector('.maior');
-const botao = document.querySelector('botao-adicionar');
+const botao = document.querySelector('.botao-adicionar');
 
 const Gasto= { 
     descricao: "",
@@ -45,10 +39,23 @@ const orca= document.querySelector('.orca')
        console.log(`R$ ${valorrest} disponíveis`)
     }
 
+    function podeAdicionar(nomeDigitado,valorDigitado) {
+    return nomeDigitado.trim() !== '' && valorDigitado !== '';
+}
+   console.log( podeAdicionar(campoDescricao.value, campoValor.value))
 
     function atualizarBotao() {
-       botao.disabled = !podeComprar(campoDescricao.value, campoValor.value);
+       botao.disabled = !podeAdicionar(campoDescricao.value, campoValor.value);
 } 
+    atualizarBotao();
+
+campoDescricao.addEventListener('input', function () {
+    atualizarBotao();
+});
+
+campoValor.addEventListener('input', function () {
+    atualizarBotao();
+});
 
 formulario.addEventListener('submit', function (evento) {
 evento.preventDefault();
@@ -56,13 +63,7 @@ evento.preventDefault();
      Gasto.descricao = campoDescricao.value.trim();
     Gasto.valor = Number(campoValor.value);
 
-    if (Gasto.descricao === '') {
-        erro.textContent = 'Escreva uma descrição.';
-    } else if (campoValor.value === '') {
-        erro.textContent = 'Informe o valor.';
-    } else if (Gasto.valor <= 0) {
-        erro.textContent = 'O valor precisa ser maior que zero.';
-    } else {
+    
       
        const ngasto = document.querySelector('.quantidade');
        ngastos= Number(ngasto.textContent);
@@ -109,8 +110,8 @@ evento.preventDefault();
 
         montarTextoDoGasto(Gasto)
        montarMensagemDoOrcamento(orca.textContent)
-      }
-        console.log( formatarReais(Gasto.valor));  
+      
+         console.log( formatarReais(Gasto.valor));  
          console.log(calcularMedia(total, ngastos));
-         
-    });
+    
+        });
