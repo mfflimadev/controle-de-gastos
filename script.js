@@ -1,16 +1,30 @@
 
 
+    function podeComprar(nomeDigitado,valorDigitado) {
+    return nomeDigitado.trim() !== '' && valorDigitado !== '';
+}
+
+
+
 const formulario = document.querySelector('.formulario');
 const campoDescricao = document.querySelector('.campo-descricao');
 const campoValor = document.querySelector('.campo-valor');
 const erro = document.querySelector('.erro');
-
 const telaTotal = document.querySelector('.total');
 const telaMaior = document.querySelector('.maior');
+const botao = document.querySelector('botao-adicionar');
+
+const Gasto= { 
+    descricao: "",
+    valor:0,
+}
+
+let maiorGasto={
+    descricao:"",
+    valor:0,
+}
 
 let total = 0;
-let maiorValor = 0;
-let maiorDescricao = '';
 let texthist='';
 let ngastos=0
 const orca= document.querySelector('.orca')
@@ -18,24 +32,35 @@ const orca= document.querySelector('.orca')
 
    function formatarReais(valor) { 
     return 'R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+    }
     function calcularMedia(total,ngasto){
         return total/ngasto 
-    };
+    }
+
+    function montarTextoDoGasto(Gasto) {
+        console.log(`${Gasto.descricao+' — '+ formatarReais(Gasto.valor)}`)
+    }
+    
+    function montarMensagemDoOrcamento( valorrest){
+       console.log(`R$ ${valorrest} disponíveis`)
+    }
 
 
+    function atualizarBotao() {
+       botao.disabled = !podeComprar(campoDescricao.value, campoValor.value);
+} 
 
 formulario.addEventListener('submit', function (evento) {
 evento.preventDefault();
 
-    const descricao = campoDescricao.value.trim();
-    const valor = Number(campoValor.value);
+     Gasto.descricao = campoDescricao.value.trim();
+    Gasto.valor = Number(campoValor.value);
 
-    if (descricao === '') {
+    if (Gasto.descricao === '') {
         erro.textContent = 'Escreva uma descrição.';
     } else if (campoValor.value === '') {
         erro.textContent = 'Informe o valor.';
-    } else if (valor <= 0) {
+    } else if (Gasto.valor <= 0) {
         erro.textContent = 'O valor precisa ser maior que zero.';
     } else {
       
@@ -44,21 +69,17 @@ evento.preventDefault();
        ngastos= ngastos+1;
        ngasto.textContent= ngastos;
        
-       console.log(ngastos)
-        
-
         erro.textContent = '';
  
-        total = total + valor;
+        total = total + Gasto.valor;
 
-        if (valor > maiorValor) {
-            maiorValor = valor;
-            maiorDescricao = descricao;
+        if (Gasto.valor > maiorGasto.valor) {
+             maiorGasto=Gasto
         }
 
         // mostrar na tela
         telaTotal.textContent = formatarReais(total);
-        telaMaior.textContent = maiorDescricao +" — " +formatarReais(maiorValor);
+        telaMaior.textContent = maiorGasto.descricao +" — " +formatarReais(maiorGasto.valor);
 
         // limpar para o próximo
         campoDescricao.value = '';
@@ -69,12 +90,12 @@ evento.preventDefault();
         
         const historico = document.querySelector('.historico') ;
         historico.textContent='';
-        texthist += `\n${descricao}` +  `${"--"+formatarReais(total)}`;
+        texthist += `\n${Gasto.descricao}` +  `${"--"+formatarReais(total)}`;
         historico.textContent += texthist;
 
         
 
-        orca.textContent= `${Number(orca.textContent.replace(',', '.'))- valor}` ;
+        orca.textContent= `${Number(orca.textContent.replace(',', '.'))- Gasto.valor}` ;
 
         if (Number(orca.textContent)<=0){ 
          orca.textContent='0'
@@ -85,8 +106,11 @@ evento.preventDefault();
            tot.classList.toggle('estourado')
           rest.classList.toggle('estourado');     
         }
-     }
 
-        console.log( formatarReais(valor));  
-         console.log( calcularMedia(total, ngastos));
+        montarTextoDoGasto(Gasto)
+       montarMensagemDoOrcamento(orca.textContent)
+      }
+        console.log( formatarReais(Gasto.valor));  
+         console.log(calcularMedia(total, ngastos));
+         
     });

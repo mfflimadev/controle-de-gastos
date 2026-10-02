@@ -18,14 +18,16 @@ body {
     color: #26302a;
 }
 
-
+:root {
+  --primary-bg-color:#1f3a2e ; 
+}
 /* -----------------------------------------------------------
    Topo
    ----------------------------------------------------------- */
 
 .topo {
     padding: 28px 20px;
-    background-color: #1f3a2e;
+    background-color: var(--primary-bg-color);
     color: #ffffff;
     text-align: center;
 }
@@ -71,7 +73,7 @@ body {
 
 .cartao h2 {
     font-size: 18px;
-    color: #1f3a2e;
+    color: var(--primary-bg-color);
 }
 
 
@@ -116,6 +118,12 @@ button:hover {
     background-color: #25563f;
 }
 
+button:disabled{
+background-color: #4a4d5e;
+    color:#9a98a8 ;
+    cursor: not-allowed;
+}
+
 .erro {
     margin: 12px 0 0 0;
     color: #b3261e;
@@ -149,7 +157,7 @@ button:hover {
     display: block;
     margin-top: 2px;
     font-size: 20px;
-    color: #1f3a2e;
+    color: var(--primary-bg-color);
 }
 
 
@@ -168,7 +176,7 @@ button:hover {
     display: block;
     margin-top: 2px;
     font-size: 18px;
-    color: #1f3a2e;
+    color: var(--primary-bg-color);
 }
 
 /* Quando o total passa do orçamento. */
@@ -176,20 +184,15 @@ button:hover {
 .restante.estourado {
     color: #b3261e;
 }
-
-
 /* -----------------------------------------------------------
    Histórico
-   ----------------------------------------------------------- */
-
+----------------------------------------------------------- */
 .historico {
     margin: 0;
     color: #3c4a41;
-
     /* Faz o \n dentro do texto virar quebra de linha na tela. */
     white-space: pre-line;
 }
-
 .orca{
     display: inline;
 }
