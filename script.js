@@ -1,5 +1,3 @@
-
-
 const formulario = document.querySelector('.formulario');
 const campoDescricao = document.querySelector('.campo-descricao');
 const campoValor = document.querySelector('.campo-valor');
@@ -7,8 +5,11 @@ const erro = document.querySelector('.erro');
 const telaTotal = document.querySelector('.total');
 const telaMaior = document.querySelector('.maior');
 const botao = document.querySelector('.botao-adicionar');
+const historico = document.querySelector('.historico') ;
+const lista= []
 
 const Gasto= { 
+    id: "",
     descricao: "",
     valor:0,
 }
@@ -23,6 +24,22 @@ let texthist='';
 let ngastos=0
 const orca= document.querySelector('.orca')
 
+
+    function limparTexto(){
+         campoDescricao.value = '';
+        campoValor.value = '';
+    }
+
+    function contarGastos(){
+          ngastos= Number(ngasto.textContent);
+       ngastos= ngastos+1;
+       ngasto.textContent= ngastos;
+       return ngastos 
+    }
+     function lerGasto() { 
+       Gasto.descricao = campoDescricao.value.trim();
+       Gasto.valor = Number(campoValor.value);
+    }
 
    function formatarReais(valor) { 
     return 'R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -47,6 +64,17 @@ const orca= document.querySelector('.orca')
     function atualizarBotao() {
        botao.disabled = !podeAdicionar(campoDescricao.value, campoValor.value);
 } 
+    function montarHistorico(lista){
+        let itens='';
+        for (let i=0; i<lista.length;i++){
+            itens= itens+`<li>${lista[i]}</li>`
+        }
+         historico.textContent='';
+        texthist += `\n${Gasto.descricao}` +  `${"--"+formatarReais(total)}`;
+        historico.textContent += texthist;
+        return itens;
+    }
+
     atualizarBotao();
 
 campoDescricao.addEventListener('input', function () {
@@ -60,15 +88,15 @@ campoValor.addEventListener('input', function () {
 formulario.addEventListener('submit', function (evento) {
 evento.preventDefault();
 
-     Gasto.descricao = campoDescricao.value.trim();
-    Gasto.valor = Number(campoValor.value);
+       lerGasto()
+        console.log(Gasto)
+       lista.push({"descricao":campoDescricao.value,"valor":campoValor.value});
+       console.log(lista);
 
-    
-      
-       const ngasto = document.querySelector('.quantidade');
-       ngastos= Number(ngasto.textContent);
-       ngastos= ngastos+1;
-       ngasto.textContent= ngastos;
+
+        ngasto = document.querySelector('.quantidade');
+       contarGastos()
+     
        
         erro.textContent = '';
  
@@ -77,22 +105,20 @@ evento.preventDefault();
         if (Gasto.valor > maiorGasto.valor) {
              maiorGasto=Gasto
         }
-
         // mostrar na tela
         telaTotal.textContent = formatarReais(total);
         telaMaior.textContent = maiorGasto.descricao +" — " +formatarReais(maiorGasto.valor);
 
         // limpar para o próximo
-        campoDescricao.value = '';
-        campoValor.value = '';
+       limparTexto();
 
         const mgasto = document.querySelector('.media')
         mgasto.textContent= formatarReais(calcularMedia(total,ngastos))
         
-        const historico = document.querySelector('.historico') ;
-        historico.textContent='';
-        texthist += `\n${Gasto.descricao}` +  `${"--"+formatarReais(total)}`;
-        historico.textContent += texthist;
+        historico.innerHTML=montarHistorico(lista);
+        
+        
+       
 
         
 
@@ -114,4 +140,4 @@ evento.preventDefault();
          console.log( formatarReais(Gasto.valor));  
          console.log(calcularMedia(total, ngastos));
     
-        });
+        }); 
