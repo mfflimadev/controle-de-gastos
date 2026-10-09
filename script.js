@@ -67,7 +67,7 @@ const orca= document.querySelector('.orca')
     function montarHistorico(lista){
         let itens='';
         for (let i=0; i<lista.length;i++){
-            itens= itens+`<li>${lista[i]}</li>`
+            itens= itens+`<li>\n${lista[i].descricao} ` + `${" -- "+formatarReais(total)}</li>`
         }
          historico.textContent='';
         texthist += `\n${Gasto.descricao}` +  `${"--"+formatarReais(total)}`;
