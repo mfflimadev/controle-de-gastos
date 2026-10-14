@@ -6,6 +6,8 @@ const telaTotal = document.querySelector('.total');
 const telaMaior = document.querySelector('.maior');
 const botao = document.querySelector('.botao-adicionar');
 const historico = document.querySelector('.historico') ;
+const orca= document.querySelector('.orca')
+const botaoRemover=document.querySelector('.botao-remover')
 const lista= []
 
 const Gasto= { 
@@ -19,11 +21,12 @@ let maiorGasto={
     valor:0,
 }
 
-let total = 0;
-let texthist='';
-let ngastos=0
-const orca= document.querySelector('.orca')
+let menorGasto={
+    descricao:"",
+    valor:0,
+}
 
+let ngastos=0
 
     function limparTexto(){
          campoDescricao.value = '';
@@ -44,10 +47,7 @@ const orca= document.querySelector('.orca')
    function formatarReais(valor) { 
     return 'R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
-    function calcularMedia(total,ngasto){
-        return total/ngasto 
-    }
-
+    
     function montarTextoDoGasto(Gasto) {
         console.log(`${Gasto.descricao+' — '+ formatarReais(Gasto.valor)}`)
     }
@@ -58,27 +58,75 @@ const orca= document.querySelector('.orca')
 
     function podeAdicionar(nomeDigitado,valorDigitado) {
     return nomeDigitado.trim() !== '' && valorDigitado !== '';
-}
-   console.log( podeAdicionar(campoDescricao.value, campoValor.value))
+    }
+     function podeRemover(lista) {
+    return lista.length>0 ;
+    }
 
     function atualizarBotao() {
-       botao.disabled = !podeAdicionar(campoDescricao.value, campoValor.value);
-} 
+       botao.disabled = !podeAdicionar(campoDescricao.value, campoValor.value)};
+
+    function atualizarBotao2() {
+        if (podeRemover(lista)) { 
+            botaoRemover.disabled=false;
+           
+        } else {
+         botaoRemover.disabled=true;
+    }
+}
+
     function montarHistorico(lista){
         let itens='';
         for (let i=0; i<lista.length;i++){
-            itens= itens+`<li>\n${lista[i].descricao} ` + `${" -- "+formatarReais(total)}</li>`
+            itens= itens+`<li>\n${lista[i].descricao} ` + `${" -- "+formatarReais(lista[i].valor)}</li>`
         }
-         historico.textContent='';
+         /*historico.textContent='';
         texthist += `\n${Gasto.descricao}` +  `${"--"+formatarReais(total)}`;
-        historico.textContent += texthist;
+        historico.textContent += texthist;*/
         return itens;
     }
 
-    atualizarBotao();
+    function calcularTotal(lista){
+        console.log(lista.length)
+        let total= 0;
+        for( let i=0; i<lista.length;i++){
+            total= total+ lista[i].valor;
+            console.log(lista[i].valor)
+        }
+        return total
+    }
+    function calcularMedia(ngasto){
+        return calcularTotal(lista)/ngasto 
+    }
+
+
+    function calcularMaiorGasto(lista){
+        let maior= lista[0];
+        for(let i=1;i<lista.length;i++){
+            if (lista[i].valor>maior.valor){
+                maior=nota[i]; 
+            }
+        }
+        return maior;
+    }
+
+    function calcularMenorGasto(lista){
+        let menor= lista[0];
+        for(let i=1;i<lista.length;i++){
+            if (lista[i].valor<menor.valor){
+                menor=nota[i]; 
+            }
+        }
+        return menor;
+    }
+    function mostrarPagina(){
+
+    }
+    
 
 campoDescricao.addEventListener('input', function () {
     atualizarBotao();
+    
 });
 
 campoValor.addEventListener('input', function () {
@@ -89,39 +137,29 @@ formulario.addEventListener('submit', function (evento) {
 evento.preventDefault();
 
        lerGasto()
-        console.log(Gasto)
-       lista.push({"descricao":campoDescricao.value,"valor":campoValor.value});
-       console.log(lista);
-
+       lista.push({"descricao":campoDescricao.value,"valor":Number(campoValor.value)});
 
         ngasto = document.querySelector('.quantidade');
-       contarGastos()
+        ngasto= contarGastos()
      
-       
         erro.textContent = '';
  
-        total = total + Gasto.valor;
-
-        if (Gasto.valor > maiorGasto.valor) {
-             maiorGasto=Gasto
-        }
+        
+             maiorGasto=calcularMaiorGasto(lista);
+             menorGasto=calcularMenorGasto(lista);
+        console.log(`Maior Gasto = maiorGasto`)
         // mostrar na tela
-        telaTotal.textContent = formatarReais(total);
+        telaTotal.textContent = formatarReais( calcularTotal(lista) );
         telaMaior.textContent = maiorGasto.descricao +" — " +formatarReais(maiorGasto.valor);
 
         // limpar para o próximo
        limparTexto();
 
         const mgasto = document.querySelector('.media')
-        mgasto.textContent= formatarReais(calcularMedia(total,ngastos))
+        mgasto.textContent= formatarReais(calcularMedia(ngastos))
         
         historico.innerHTML=montarHistorico(lista);
-        
-        
-       
-
-        
-
+    
         orca.textContent= `${Number(orca.textContent.replace(',', '.'))- Gasto.valor}` ;
 
         if (Number(orca.textContent)<=0){ 
@@ -138,6 +176,15 @@ evento.preventDefault();
        montarMensagemDoOrcamento(orca.textContent)
       
          console.log( formatarReais(Gasto.valor));  
-         console.log(calcularMedia(total, ngastos));
-    
-        }); 
+         console.log(calcularMedia( ngastos));
+
+        atualizarBotao2();
+        });
+        
+        botaoRemover.addEventListener('click', function () {
+       lista.pop();
+       atualizarBotao2()
+        historico.innerHTML=montarHistorico(lista)
+      
+       });
+ 
