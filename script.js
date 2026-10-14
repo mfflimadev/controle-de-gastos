@@ -8,6 +8,7 @@ const botao = document.querySelector('.botao-adicionar');
 const historico = document.querySelector('.historico') ;
 const orca= document.querySelector('.orca')
 const botaoRemover=document.querySelector('.botao-remover')
+const mgasto = document.querySelector('.media')
 const lista= []
 
 const Gasto= { 
@@ -34,14 +35,16 @@ let ngastos=0
     }
 
     function contarGastos(){
-          ngastos= Number(ngasto.textContent);
+       ngastos= Number(document.querySelector('.quantidade').textContent);
        ngastos= ngastos+1;
        ngasto.textContent= ngastos;
        return ngastos 
     }
+
      function lerGasto() { 
        Gasto.descricao = campoDescricao.value.trim();
        Gasto.valor = Number(campoValor.value);
+       lista.push({"descricao":campoDescricao.value,"valor":Number(campoValor.value)});
     }
 
    function formatarReais(valor) { 
@@ -95,10 +98,9 @@ let ngastos=0
         }
         return total
     }
-    function calcularMedia(ngasto){
-        return calcularTotal(lista)/ngasto 
+    function calcularMedia(lista){
+        return calcularTotal(lista)/ngastos
     }
-
 
     function calcularMaiorGasto(lista){
         let maior= lista[0];
@@ -114,12 +116,16 @@ let ngastos=0
         let menor= lista[0];
         for(let i=1;i<lista.length;i++){
             if (lista[i].valor<menor.valor){
-                menor=nota[i]; 
+                menor=lista[i]; 
             }
         }
         return menor;
     }
     function mostrarPagina(){
+        telaTotal.textContent = formatarReais( calcularTotal(lista) );
+        telaMaior.textContent = maiorGasto.descricao +" — " +formatarReais(maiorGasto.valor);
+        
+        mgasto.textContent= formatarReais(calcularMedia(lista))
 
     }
     
@@ -133,30 +139,26 @@ campoValor.addEventListener('input', function () {
     atualizarBotao();
 });
 
+atualizarBotao();
+atualizarBotao2();
+
 formulario.addEventListener('submit', function (evento) {
 evento.preventDefault();
 
        lerGasto()
-       lista.push({"descricao":campoDescricao.value,"valor":Number(campoValor.value)});
-
-        ngasto = document.querySelector('.quantidade');
-        ngasto= contarGastos()
+       contarGastos()
      
-        erro.textContent = '';
+       erro.textContent = '';
  
-        
-             maiorGasto=calcularMaiorGasto(lista);
-             menorGasto=calcularMenorGasto(lista);
-        console.log(`Maior Gasto = maiorGasto`)
-        // mostrar na tela
-        telaTotal.textContent = formatarReais( calcularTotal(lista) );
-        telaMaior.textContent = maiorGasto.descricao +" — " +formatarReais(maiorGasto.valor);
+       mostrarPagina()
+
+       maiorGasto=calcularMaiorGasto(lista);
+       menorGasto=calcularMenorGasto(lista);
 
         // limpar para o próximo
        limparTexto();
 
-        const mgasto = document.querySelector('.media')
-        mgasto.textContent= formatarReais(calcularMedia(ngastos))
+        
         
         historico.innerHTML=montarHistorico(lista);
     
@@ -176,13 +178,14 @@ evento.preventDefault();
        montarMensagemDoOrcamento(orca.textContent)
       
          console.log( formatarReais(Gasto.valor));  
-         console.log(calcularMedia( ngastos));
+         console.log(calcularMedia(lista));
 
         atualizarBotao2();
         });
         
         botaoRemover.addEventListener('click', function () {
        lista.pop();
+       atualizarBotao()
        atualizarBotao2()
         historico.innerHTML=montarHistorico(lista)
       
