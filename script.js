@@ -177,16 +177,47 @@ evento.preventDefault();
         montarMensagemDoOrcamento(orca.textContent)
       
          console.log( formatarReais(Gasto.valor));  
-         console.log(calcularMedia(lista));
+         console.log(`Media=${calcularMedia(lista)}`);
 
         atualizarBotao2();
         });
         
         botaoRemover.addEventListener('click', function () {
        lista.pop();
-       atualizarBotao()
-       atualizarBotao2()
-        historico.innerHTML=montarHistorico(lista)
+
+       lerGasto()
+       contarGastos()
+      
+       document.querySelector('.quantidade').textContent=Number(ngastos)
+       erro.textContent = '';
+ 
+       maiorGasto=calcularMaiorGasto(lista);
+       menorGasto=calcularMenorGasto(lista);
+
+       mostrarPagina()
+        // limpar para o próximo
+       limparTexto();
+ 
+        historico.innerHTML=montarHistorico(lista);
+    
+        orca.textContent= `${Number(orca.textContent.replace(',', '.'))- Gasto.valor}` ;
+
+        if (Number(orca.textContent)<=0){ 
+         orca.textContent='0'
+         
+         const tot= document.querySelector('.total')
+         const rest =document.querySelector('.restante')
+          erro.textContent= 'O orçamento foi atingido.';
+           tot.classList.toggle('estourado')
+          rest.classList.toggle('estourado');     
+        }else{
+            erro.textContent='';
+        }
+        montarMensagemDoOrcamento(orca.textContent)
+      
+         console.log(`Media=${calcularMedia(lista)}`);
+
+        atualizarBotao2();
       
        });
  
